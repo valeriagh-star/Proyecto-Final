@@ -1,5 +1,6 @@
 import math
 from src.vector import Vector3D
+from src.ray import Ray
 
 class Sphere:
     def __init__(self, center, radius):
@@ -31,3 +32,24 @@ class Sphere:
 
     def normal_at(self, point):
         return (point - self.center).normalize()
+
+class Plane:
+    def __init__(self, point, normal):
+        self.point = point
+        self.normal = normal.normalize()
+
+    def intersect(self, ray: Ray):
+        denominator = ray.direction.dot(self.normal)
+
+        if abs(denominator) < 1e-8: #Comprueba si el denominador es cero o tan pequeño que es mejor tomarlo como cero.
+            return None #el rayo es paralelo o casi paralelo al plano.
+
+        t = (self.point - ray.origin).dot(self.normal) / denominator
+
+        if t <= 0: #Descarta el cruce si queda en el origen o detrás de él.
+            return None
+
+        return t
+
+    def normal_at(self, point: Vector3D):
+        return self.normal
