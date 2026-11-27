@@ -4,3 +4,4 @@ __pycache__/
 *.ppm
 .vscode/
 .idea/
+.venv/
