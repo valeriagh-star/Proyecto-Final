@@ -1,4 +1,4 @@
-# Escenas de Prueba y Benchmark (`scenes/`)
+# Escenas de Prueba 
 
 Este directorio contiene las escenas en formato JSON diseñadas para validar la correcta proyección de cámara, el cálculo de sombras, la iluminación con múltiples fuentes de luz y el desempeño del renderizado paralelo, junto con sus imágenes de salida generadas en formato PPM (`P3`).
 
