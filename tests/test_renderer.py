@@ -82,3 +82,48 @@ def test_write_ppm_rejects_rows_with_different_widths(tmp_path):
 
     with pytest.raises(ValueError):
         write_ppm(pixel_matrix, output_path)
+
+def test_write_ppm_clamps_colors(tmp_path):
+    pixel_matrix = [
+        [Vector3D(-0.5, 0.5, 1.5)]
+    ]
+
+    output_path = tmp_path / "imagen.ppm"
+
+    write_ppm(pixel_matrix, output_path)
+
+    contenido = output_path.read_text(encoding="utf-8")
+    lineas = contenido.splitlines()
+
+    assert lineas[3] == "0 128 255"
+
+
+def test_write_ppm_single_row(tmp_path):
+    pixel_matrix = [
+        [Vector3D(1, 0, 0), Vector3D(0, 1, 0),
+         Vector3D(0, 0, 1)]
+    ]
+
+    output_path = tmp_path / "imagen.ppm"
+
+    write_ppm(pixel_matrix, output_path)
+
+    lineas = output_path.read_text(encoding="utf-8").splitlines()
+
+    assert lineas[1] == "3 1"
+
+
+def test_write_ppm_single_column(tmp_path):
+    pixel_matrix = [
+        [Vector3D(1, 0, 0)],
+        [Vector3D(0, 1, 0)],
+        [Vector3D(0, 0, 1)]
+    ]
+
+    output_path = tmp_path / "imagen.ppm"
+
+    write_ppm(pixel_matrix, output_path)
+
+    lineas = output_path.read_text(encoding="utf-8").splitlines()
+
+    assert lineas[1] == "1 3"
