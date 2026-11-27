@@ -67,7 +67,7 @@ def _construir_objetos(escena: Escena) -> List[Tuple[object, Material]]:
 def _interseccion_mas_cercana(
     ray: Ray, objetos_render: List[Tuple[object, Material]]
 ) -> Optional[Tuple[float, object, Material]]:
-    """Determina el primer objeto con el que colisiona un rayo en su trayectoria.
+    r"""Determina el primer objeto con el que colisiona un rayo en su trayectoria.
 
     Recorre todos los objetos de la escena y conserva aquel con el parámetro
     escalar `t` positivo más pequeño (es decir, el más cercano al origen del rayo
