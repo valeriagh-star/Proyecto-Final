@@ -1,0 +1,16 @@
+{
+  "imagen": { "ancho": 400, "alto": 225 },
+  "camara": { "posicion": [0, 1.5, 4], "mira_a": [0, 0, -3], "fov": 60 },
+  "fondo": [0.1, 0.15, 0.25],
+  "luz_ambiental": 0.15,
+  "luces": [
+    { "posicion": [-4, 6, 2], "intensidad": 0.7 },
+    { "posicion": [4, 4, 1], "intensidad": 0.6 }
+  ],
+  "objetos": [
+    { "tipo": "esfera", "centro": [-1.5, 0, -3], "radio": 1.0, "color": [0.2, 0.6, 0.9] },
+    { "tipo": "esfera", "centro": [1.5, 0, -3], "radio": 1.0, "color": [0.9, 0.7, 0.2] },
+    { "tipo": "esfera", "centro": [0, -0.4, -1.8], "radio": 0.6, "color": [0.3, 0.85, 0.4] },
+    { "tipo": "plano", "punto": [0, -1, 0], "normal": [0, 1, 0], "color": [0.75, 0.75, 0.75] }
+  ]
+}

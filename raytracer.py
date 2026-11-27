@@ -58,9 +58,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     )
     print(f"Archivo de salida configurado: {args.salida}")
 
-    # Punto de integración para Ola 2 / Ola 3 (src/renderer.py):
-    # from src.renderer import renderizar
-    # renderizar(escena, args.salida, trabajadores=args.trabajadores)
+    from src.renderer import renderizar
+    renderizar(escena, args.salida, trabajadores=args.trabajadores)
     return 0
 
 
