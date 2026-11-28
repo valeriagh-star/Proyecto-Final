@@ -1,14 +1,16 @@
 """Interfaz de línea de comandos (CLI) del trazador de rayos.
 
-Este archivo constituye el punto de entrada ejecutable del proyecto. Sus
-responsabilidades son:
-1. Analizar y validar los argumentos recibidos desde la terminal (`escena`,
-   `salida` y la bandera opcional `--trabajadores`).
-2. Cargar y validar la estructura del archivo JSON mediante `cargar_escena`,
-   capturando errores de formato o de dominio (`SceneError`) para informar
-   al usuario sin mostrar trazas internas innecesarias.
-3. Invocar el motor de renderizado con el nivel de paralelismo solicitado
-   y capturar posibles errores de escritura o validación al generar la imagen.
+¿Qué es este módulo?
+Es el punto de entrada ejecutable del programa desde la terminal.
+
+¿En qué se usa?
+Permite al usuario ejecutar comandos como:
+`python3 raytracer.py scenes/escena1_basica.json salida.ppm --trabajadores 4`
+
+¿Por qué está organizado en funciones (`_entero_positivo`, `construir_parser`, `main`)?
+Separar el parser y la función `main(argv)` del bloque `if __name__ == "__main__":`
+permite que `tests/test_scene.py` pruebe la CLI directamente llamando a `main([...])`
+en memoria sin tener que abrir subprocesos externos.
 """
 
 import argparse
@@ -19,16 +21,15 @@ from src.scene import SceneError, cargar_escena
 
 
 def _entero_positivo(valor: str) -> int:
-    """Valida que un argumento de línea de comandos sea un número entero positivo (>= 1).
+    """Validador de tipo para `argparse` que exige un número entero >= 1.
 
-    Args:
-        valor (str): Cadena textual recibida en el argumento `--trabajadores`.
+    ¿Para qué se usa?
+    Valida el valor pasado a `--trabajadores` antes de iniciar el programa.
 
-    Returns:
-        int: Número entero validado estrictamente mayor o igual a `1`.
-
-    Raises:
-        argparse.ArgumentTypeError: Si `valor` no representa un entero o es `< 1`.
+    ¿Por qué se creó en lugar de usar `type=int`?
+    `type=int` aceptaría `0` o `-3` procesos trabajadores. Este validador
+    lanza `argparse.ArgumentTypeError`, haciendo que `argparse` detenga la
+    ejecución y muestre un mensaje de error claro al usuario.
     """
     try:
         numero = int(valor)
@@ -44,11 +45,10 @@ def _entero_positivo(valor: str) -> int:
 
 
 def construir_parser() -> argparse.ArgumentParser:
-    """Construye y configura el analizador de argumentos de línea de comandos.
+    """Crea y configura el analizador de argumentos de la terminal (`argparse`).
 
-    Returns:
-        argparse.ArgumentParser: Analizador configurado con los parámetros
-        posicionales `escena` y `salida`, y el parámetro opcional `--trabajadores`.
+    Define dos argumentos posicionales obligatorios (`escena` y `salida`) y una
+    bandera opcional (`--trabajadores`, por defecto `1`).
     """
     parser = argparse.ArgumentParser(
         prog="raytracer.py",
@@ -72,15 +72,13 @@ def construir_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
-    """Ejecuta el flujo completo de lectura de argumentos, carga y renderizado.
+    """Coordina la lectura de argumentos, validación de escena y renderizado.
 
-    Args:
-        argv (Optional[Sequence[str]], optional): Secuencia de argumentos CLI.
-            Si es `None`, `argparse` lee automáticamente `sys.argv[1:]`.
-
-    Returns:
-        int: Código de estado POSIX (`0` si la ejecución fue exitosa, `1` si
-        ocurrió un error controlado al cargar la escena o escribir la imagen).
+    ¿Por qué retorna `0` o `1`?
+    En sistemas Unix/Linux (como Fedora), los programas de terminal devuelven
+    `0` cuando terminan correctamente y un código distinto de cero (`1`) cuando
+    ocurre un error controlado (como un JSON mal formado o falta de permisos de
+    escritura), evitando mostrar trazas de excepción crudas al usuario final.
     """
     parser = construir_parser()
     args = parser.parse_args(argv)
@@ -98,7 +96,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     )
     print(f"Archivo de salida configurado: {args.salida}")
 
-    # Importación diferida para evitar sobrecarga si el archivo JSON falló al validarse
+    # Importación diferida: evita cargar el motor de renderizado y `multiprocessing`
+    # si la escena JSON falló al validarse en el paso anterior.
     from src.renderer import renderizar
 
     try:
@@ -111,6 +110,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     return 0
 
 
-# Protección estándar de punto de entrada: indispensable cuando se usa `multiprocessing`
+# Protección de punto de entrada: en Python es obligatoria al usar `multiprocessing`
+# para evitar que los procesos hijos vuelvan a ejecutar `main()` al importarse.
 if __name__ == "__main__":
     sys.exit(main())
