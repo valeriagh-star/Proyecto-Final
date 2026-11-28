@@ -1,0 +1,28 @@
+
+{
+    "imagen": {
+        "ancho": 200,
+        "alto": 150
+    },
+    "camara": {
+        "posicion": [0, 0, 0],
+        "mira_a": [0, 0, -1],
+        "fov": 90
+    },
+    "fondo": [0.05, 0.05, 0.15],
+    "luz_ambiental": 0.15,
+    "luces": [
+        {
+            "posicion": [-3, 4, 0],
+            "intensidad": 0.8
+        }
+    ],
+    "objetos": [
+        {
+            "tipo": "esfera",
+            "centro": [0, 0, -4],
+            "radio": 1,
+            "color": [1, 0, 0]
+        }
+    ]
+}

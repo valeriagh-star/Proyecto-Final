@@ -40,8 +40,8 @@ class Camera:
 
         # Calculamos el tamaño del plano de imagen.
         self.aspect_ratio = ancho / alto
-        self.half_height = math.tan(math.radians(fov) / 2)
-        self.half_width = self.aspect_ratio * self.half_height
+        self.half_width = math.tan(math.radians(fov) / 2)
+        self.half_height = self.half_width / self.aspect_ratio
 
     def _cross(self, a, b):
         """Calcula el producto cruz de dos vectores."""

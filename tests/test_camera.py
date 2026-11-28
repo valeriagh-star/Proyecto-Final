@@ -73,3 +73,15 @@ def test_fov_invalido():
 def test_posicion_y_mira_iguales():
     with pytest.raises(ValueError):
         Camera(Vector3D(0, 0, 0), Vector3D(0, 0, 0), 90, 100, 100)
+
+def test_fov_horizontal():
+    camara = Camera(
+        posicion=Vector3D(0, 0, 0),
+        mira_a=Vector3D(0, 0, -1),
+        fov=90,
+        ancho=200,
+        alto=100
+    )
+
+    assert camara.half_width == pytest.approx(1.0)
+    assert camara.half_height == pytest.approx(0.5)
